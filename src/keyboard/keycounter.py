@@ -1,5 +1,7 @@
 from pynput import keyboard
 from PyQt5.QtWidgets import QDialog
+import src.utils.filemanager as fm
+import src.utils.timer as timer
 
 
 class KeyCounter:
@@ -14,6 +16,9 @@ class KeyCounter:
             '<ctrl>+<alt>+i': self.on_activate_i,
             '<ctrl>+<c>': self.on_ctrl_c,
             '<ctrl>+<v>': self.on_ctrl_v})
+
+    def load_data(self, data):
+        self.key_map = data
 
     def start(self):
         self.listener.start()
@@ -59,3 +64,14 @@ class KeyCounter:
 class KeyCounterDlg(QDialog):
     def __init__(self, parent=None):
         super().__init__(self, parent)
+        self.bar_chart_btn = None
+        self.key_counter = KeyCounter()
+        self.key_counter.load_data(fm.read_data_from(timer.get_today_date_str() + ".txt"))
+        self.key_counter.start()
+        self.init_ui()
+
+    def init_ui(self):
+        self.setWindowTitle("KeyCounter")
+
+    def run_background(self):
+        pass
