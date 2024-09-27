@@ -21,39 +21,33 @@ class PanelWindow(QMainWindow):
         self.move((screen_rect.width() - self.width()) / 2, (screen_rect.height() - self.height()) / 2)
 
     def init_menus(self):
-        menu_bar = QMenuBar()
+        menu_bar = self.menuBar()
 
-        file_menu = QMenu()
-        quit_action = QAction("Quit")
+        file_menu = menu_bar.addMenu("File")
+        quit_action = QAction("Quit", file_menu)
         quit_action.triggered.connect(self.close)
         file_menu.addAction(quit_action)
 
-        start_menu = QMenu("Start")
-        keyboard_action = QAction("KeyCounter")
+        start_menu = menu_bar.addMenu("Start")
+        keyboard_action = QAction("KeyCounter", start_menu)
         start_menu.addAction(keyboard_action)
 
-        setting_menu = QMenu("Setting")
-        setting_edit_action = QAction("Edit")
+        setting_menu = menu_bar.addMenu("Setting")
+        setting_edit_action = QAction("Edit", setting_menu)
         setting_menu.addAction(setting_edit_action)
-
-        menu_bar.addMenu(file_menu)
-        menu_bar.addMenu(start_menu)
-        menu_bar.addMenu(setting_menu)
-
-        self.setMenuBar(menu_bar)
 
     def init_tray_icon(self):
         self.tray_icon = QSystemTrayIcon(self)
         self.tray_icon.setIcon(QApplication.style().standardIcon(QApplication.style().SP_ComputerIcon))
 
         tray_icon_menu = QMenu()
-        restore_action = QAction("Restore")
+        restore_action = QAction("Restore", tray_icon_menu)
         restore_action.triggered.connect(self.showNormal)
-        quit_action = QAction("Quit")
+        quit_action = QAction("Quit", tray_icon_menu)
         quit_action.triggered.connect(self.close)
 
-        statistics_menu = QMenu("Statistics")
-        keyboard_action = QAction("KeyCounter")
+        statistics_menu = QMenu("Statistics", tray_icon_menu)
+        keyboard_action = QAction("KeyCounter", tray_icon_menu)
         keyboard_action.triggered.connect(self.show_key_counter)
         statistics_menu.addAction(keyboard_action)
 
