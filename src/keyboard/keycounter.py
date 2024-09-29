@@ -1,12 +1,12 @@
 from pynput import keyboard
-from PyQt5.QtWidgets import QDialog
+from PyQt5.QtWidgets import QDialog, QFormLayout, QLabel
 import src.utils.filemanager as fm
 import src.utils.timer as timer
 
 
 class KeyCounter:
     def __init__(self):
-        self.key_map = {}
+        self.key_map: dict[str, int] = {}
         self.exit_key = keyboard.Key.esc
         self.listener = keyboard.Listener(
             on_press=self.__on_press,
@@ -14,8 +14,8 @@ class KeyCounter:
         self.shortcut = keyboard.GlobalHotKeys({
             '<ctrl>+<alt>+h': self.on_activate_h,
             '<ctrl>+<alt>+i': self.on_activate_i,
-            '<ctrl>+<c>': self.on_ctrl_c,
-            '<ctrl>+<v>': self.on_ctrl_v})
+            '<ctrl>+c': self.on_ctrl_c,
+            '<ctrl>+v': self.on_ctrl_v})
 
     def load_data(self, data):
         self.key_map = data
@@ -35,10 +35,16 @@ class KeyCounter:
     def __on_press(self, key):
         try:
             # print('alphanumeric key {0} pressed'.format(key.char))
-            self.key_map[key.char] += 1
+            if key.char in self.key_map:
+                self.key_map[key.char] += 1
+            else:
+                self.key_map[key.char] = 1
         except AttributeError:
-            print('special key {0} pressed'.format(key))
-            self.key_map[key] += 1
+            # print('special key {0} pressed'.format(key))
+            if key in self.key_map:
+                self.key_map[key] += 1
+            else:
+                self.key_map[key] = 1
 
     def __on_release(self, key):
         # print('{0} released'.format(key))
@@ -47,6 +53,7 @@ class KeyCounter:
 
     def on_activate_h(self):
         print('<ctrl>+<alt>+h pressed')
+        pass
 
     def on_activate_i(self):
         print('<ctrl>+<alt>+i pressed')
@@ -63,15 +70,17 @@ class KeyCounter:
 
 class KeyCounterDlg(QDialog):
     def __init__(self, parent=None):
-        super().__init__(self, parent)
+        super().__init__(parent)
         self.bar_chart_btn = None
         self.key_counter = KeyCounter()
         self.key_counter.load_data(fm.read_data_from(timer.get_today_date_str() + ".txt"))
         self.key_counter.start()
         self.init_ui()
+        self.hide()
 
     def init_ui(self):
         self.setWindowTitle("KeyCounter")
-
-    def run_background(self):
-        pass
+        main_lyt = QFormLayout()
+        lbl = QLabel("Test")
+        main_lyt.addWidget(lbl)
+        self.setLayout(main_lyt)

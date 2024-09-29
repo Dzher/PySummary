@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget, QSystemTrayIcon, QMenu, QMenuBar, QAction, \
     QMessageBox
 from PyQt5.QtCore import QTimer, QEvent
+from src.keyboard.keycounter import KeyCounterDlg
 
 
 class PanelWindow(QMainWindow):
@@ -11,6 +12,8 @@ class PanelWindow(QMainWindow):
         self.init_ui()
         self.init_menus()
         self.init_tray_icon()
+        # TODO: run background should load from config settings
+        self.run_background()
 
     def init_ui(self):
         self.setWindowIcon(QApplication.style().standardIcon(QApplication.style().SP_ComputerIcon))
@@ -61,7 +64,11 @@ class PanelWindow(QMainWindow):
         self.tray_icon.setToolTip("Summary")
         self.tray_icon.show()
 
+    def run_background(self):
+        self.key_counter_dlg = KeyCounterDlg(self)
+
     def show_key_counter(self):
+        self.setCentralWidget(self.key_counter_dlg)
         self.key_counter_dlg.show()
 
     def changeEvent(self, event):

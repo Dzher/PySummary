@@ -1,6 +1,7 @@
-import timer
+from src.utils import timer
 import threading
 import time
+import os
 
 
 # open()函数: 用来打开一个文件，返回一个文件对象。
@@ -21,10 +22,11 @@ def write_today_log_with(data, mode="w"):
 
 def read_data_from(file_name):
     data = {}
-    with open(file_name, "r") as f:
-        for line in f:
-            key, value_str = line.strip().split(' ')
-            data[key] = int(value_str)
+    if os.path.exists(file_name):
+        with open(file_name, "r") as f:
+            for line in f:
+                key, value_str = line.strip().split(' ')
+                data[key] = int(value_str)
     return data
 
 
