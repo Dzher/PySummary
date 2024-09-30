@@ -33,6 +33,7 @@ class PanelWindow(QMainWindow):
 
         start_menu = menu_bar.addMenu("Start")
         keyboard_action = QAction("KeyCounter", start_menu)
+        keyboard_action.triggered.connect(self.show_key_counter)
         start_menu.addAction(keyboard_action)
 
         setting_menu = menu_bar.addMenu("Setting")

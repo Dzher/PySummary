@@ -1,12 +1,18 @@
 from pynput import keyboard
-from PyQt5.QtWidgets import QDialog, QFormLayout, QLabel
-import src.utils.filemanager as fm
+from PyQt5.QtWidgets import QFrame, QFormLayout, QLabel
+import src.utils.filemanager as f_mgr
 import src.utils.timer as timer
+import threading
 
 
 class KeyCounter:
     def __init__(self):
-        self.key_map: dict[str, int] = {}
+        self.key_map: dict[str, int] = f_mgr.read_data_from(timer.get_today_date_str() + ".txt")
+
+        self.save_data_thread = threading.Thread(
+            target=f_mgr.write_to_file_thread, args=(f_mgr.write_today_log_with, self.key_map, "w"), daemon=True)
+        self.stop_thread_event = threading.Event()
+
         self.exit_key = keyboard.Key.esc
         self.listener = keyboard.Listener(
             on_press=self.__on_press,
@@ -17,14 +23,26 @@ class KeyCounter:
             '<ctrl>+c': self.on_ctrl_c,
             '<ctrl>+v': self.on_ctrl_v})
 
+        self.start()
+
+    def __del__(self):
+        self.stop()
+
     def load_data(self, data):
         self.key_map = data
 
+    def save_data(self):
+        f_mgr.write_today_log_with(self.key_map)
+
     def start(self):
+        self.save_data_thread.start()
         self.listener.start()
 
     def stop(self):
         self.listener.stop()
+        self.stop_thread_event.set()
+        self.save_data()
+        self.key_map.clear()
 
     def start_with_join(self):
         self.listener.join()
@@ -68,13 +86,11 @@ class KeyCounter:
         self.shortcut.start()
 
 
-class KeyCounterDlg(QDialog):
+class KeyCounterDlg(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.bar_chart_btn = None
         self.key_counter = KeyCounter()
-        self.key_counter.load_data(fm.read_data_from(timer.get_today_date_str() + ".txt"))
-        self.key_counter.start()
         self.init_ui()
         self.hide()
 

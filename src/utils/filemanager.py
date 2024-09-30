@@ -1,5 +1,4 @@
 from src.utils import timer
-import threading
 import time
 import os
 
@@ -16,12 +15,12 @@ import os
 
 def write_today_log_with(data, mode="w"):
     with open(timer.get_today_date_str() + ".txt", mode) as f:
-        for each in data:
-            f.write(f"{each.key} {each.value}\n")
+        for key, value in data.items():
+            f.write(f"{key} {value}\n")
 
 
 def read_data_from(file_name):
-    data = {}
+    data: dict[str, int] = {}
     if os.path.exists(file_name):
         with open(file_name, "r") as f:
             for line in f:
@@ -30,13 +29,7 @@ def read_data_from(file_name):
     return data
 
 
-def write_to_file_thread(func, time_interval=300):
+def write_to_file_thread(func, *args, time_interval=300):
     while True:
-        func()
+        func(args[0], args[1])
         time.sleep(time_interval)
-
-
-if __name__ == "__main__":
-    thread = threading.Thread(target=write_to_file_thread)
-    thread.start()
-    # 主程序其他部分
