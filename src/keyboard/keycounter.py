@@ -10,7 +10,7 @@ class KeyCounter:
         self.key_map: dict[str, int] = f_mgr.read_data_from(timer.get_today_date_str() + ".txt")
 
         self.save_data_thread = threading.Thread(
-            target=f_mgr.write_to_file_thread, args=(f_mgr.write_today_log_with, self.key_map, "w"), daemon=True)
+            target=f_mgr.run_interval_with, args=(f_mgr.write_today_log_with, self.key_map, "w"), daemon=True)
         self.stop_thread_event = threading.Event()
 
         self.exit_key = keyboard.Key.esc

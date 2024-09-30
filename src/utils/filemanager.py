@@ -29,7 +29,7 @@ def read_data_from(file_name):
     return data
 
 
-def write_to_file_thread(func, *args, time_interval=300):
+def run_interval_with(func, *args, time_interval=300):
     while True:
         func(args[0], args[1])
         time.sleep(time_interval)
