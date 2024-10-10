@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QDesktopWidget, QSystemTrayIcon, QMenu, QMenuBar, QAction, \
     QMessageBox
 from PyQt5.QtCore import QTimer, QEvent
-from src.keyboard.keycounter import KeyCounterDlg
+from src.keyboard.keycounterdlg import KeyCounterDlg
 
 
 class PanelWindow(QMainWindow):

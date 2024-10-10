@@ -1,5 +1,5 @@
 from pynput import keyboard
-from PyQt5.QtWidgets import QFrame, QFormLayout, QLabel
+
 import src.utils.filemanager as f_mgr
 import src.utils.timer as timer
 import threading
@@ -84,19 +84,3 @@ class KeyCounter:
 
     def enable_shortcut(self):
         self.shortcut.start()
-
-
-class KeyCounterDlg(QFrame):
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.bar_chart_btn = None
-        self.key_counter = KeyCounter()
-        self.init_ui()
-        self.hide()
-
-    def init_ui(self):
-        self.setWindowTitle("KeyCounter")
-        main_lyt = QFormLayout()
-        lbl = QLabel("Test")
-        main_lyt.addWidget(lbl)
-        self.setLayout(main_lyt)
